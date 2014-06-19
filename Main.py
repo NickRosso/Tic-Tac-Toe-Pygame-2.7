@@ -2,40 +2,14 @@ import pygame
 from pygame.locals import *
 import random
 import time
-
-
-pygame.init()
-DISPLAY = pygame.display.set_mode((300,300),0,32)
-pygame.display.set_caption('Tic Tac Toe')
-
-BLACK =   0,  0,  0
-TEAL =  193, 254, 212
-running = True
-
-
+TEAL =  (193, 254, 212)
+BLACK =   pygame.Color("black")
 X = "X"
 O = "O"
-won = False
 
-turn = random.choice((X,O))
-
-Ximg = pygame.image.load("X.png")
-Oimg = pygame.image.load("O.png")
-
-
-
-
-coords = [(0,0),(100,0),(200,0),
-		 (0,100),(100,100),(200,100),
-		 (0,200),(100,200),(200,200)]
-
-
-board = [None,None,None,
-		 None,None,None,
-		 None,None,None]
-print "Hit Spacebar to reset board"
-
-def template():
+def template(DISPLAY, board, Ximg, Oimg, coords):
+	
+	DISPLAY.fill(TEAL)
 	pygame.draw.line(DISPLAY, BLACK, (100, 0),(100, 300), 2)
 	pygame.draw.line(DISPLAY, BLACK, (200, 0),(200, 300), 2)
 	pygame.draw.line(DISPLAY, BLACK, (0, 100),(300, 100), 2)
@@ -48,92 +22,78 @@ def template():
 		if board[n] == O:
 			DISPLAY.blit(Oimg, (coords[n]))
 			
-		
-	
-	
-
-
-def drawXO(row, col):
-	
-	
-	if row == 1 and col == 1 and  board[0] == None:
+def draw_XO(row, col, board, turn):
+	if is_cell_taken(1, 1, board[0]):
 		board[0] = turn
 
-	if row == 2 and col == 1 and board[1] == None:
+	if is_cell_taken(2, 1, board[1]):
 		board[1] = turn
-		
-	if row == 3 and col == 1 and board[2] == None:
+
+	if is_cell_taken(3, 1, board[2]):
 		board[2] = turn
-		
 
-
-	if row == 1 and col == 2 and board[3] == None:
+	if is_cell_taken(1, 2, board[3]):
 		board[3] = turn
-		
-	if row == 2 and col == 2 and board[4] == None:
+	
+	if is_cell_taken(2, 2, board[4]):
 		board[4] = turn
-		
-	if row == 3 and col == 2 and board[5] == None:
+
+	if is_cell_taken(3, 2, board[5]):
 		board[5] = turn
-		
-		
-
-
-	if row == 1 and col == 3 and board[6] == None:
+	
+	if is_cell_taken(1, 3, board[6]):
 		board[6] = turn
 		
-	if row == 2 and col == 3 and board[7] == None:
+	if is_cell_taken(2, 3, board[7]):
 		board[7] = turn
-		
-	if row == 3 and col == 3 and board[8] == None:
+
+	if is_cell_taken(3, 3, board[8]):
 		board[8] = turn
 	
-
-
-
-def isWin():
-	#checks horizontal wins and vertical wins
-	if isRowWin(board[0], board[1], board[2]) or isRowWin(board[0], board[3], board[6]):
-		printWinner(board[0])
-		print "1"
-		
-	if isRowWin(board[3], board[4], board[5]):
-		printWinner(board[3])
-		print "2"
-
-	if isRowWin(board[1], board[4], board[7]):
-		printWinner(board[1])
-		
-	if isRowWin(board[6], board[7], board[8]) or isRowWin(board[2], board[5], board[8]):
-		printWinner(board[6])
-		print "3"
-	#check diagonal win	
-	if isRowWin(board[0], board[4], board[8]):
-		printWinner(board[0])
-		
-	if isRowWin(board[2], board[4], board[6]):
-		printWinner(board[2])
-		
-	if isTie() == True:
-		printWinner(None)	
+def is_cell_taken( x, y, content):
+	return row == x and col == y and content == None
 	
+def is_win(board):
+	if is_row_win(board[0], board[1], board[2]) or is_row_win(board[0], board[3], board[6]):
+		print_winner(board[0])
+		
+	if is_row_win(board[3], board[4], board[5]):
+		print_winner(board[3])
+		
+	if is_row_win(board[1], board[4], board[7]):
+		print_winner(board[1])
+		
+	if is_row_win(board[6], board[7], board[8]) or is_row_win(board[2], board[5], board[8]):
+		print_winner(board[6])
+		
+	if is_row_win(board[0], board[4], board[8]):
+		print_winner(board[0])
+		
+	if is_row_win(board[2], board[4], board[6]):
+		print_winner(board[2])
+		
+	if is_tie(board) == True:
+		print_winner(None)	
 	
-def isRowWin(one, two, three):
-	return one != None and one == two == three
+def is_row_win(row_start, row_middle, row_end):
+	return row_start != None and row_start == row_middle == row_end
 	
-
-def printWinner(XO):
+def print_winner(XO):
 	print "The winner is %s" % XO
+	print "-------------Press Space For New Game------------------"
 
-def isTie():
+def is_tie(board):
 	if None in board:
 		return False
 	else:
 		return True
 
-def mouse_clicked():
+def mouse_clicked(board, turn):
+	global row
+	global col
 	
 	row, col = pygame.mouse.get_pos()
+
 
 	if col < 100:
 		col = 1
@@ -153,12 +113,10 @@ def mouse_clicked():
 	if row > 200 and col <= 300:
 		row = 3
 	
-	drawXO(row, col)
-	isWin()
+	draw_XO(row, col, board, turn)
+	is_win(board)
 
-
-def turns(current_turn):
-
+def turns( turn):
 	if turn == X:
 		current_turn = O
 		return current_turn
@@ -166,35 +124,47 @@ def turns(current_turn):
 	if turn == O:
 		current_turn = X
 		return current_turn
-		
-	
-while running:
-	
-	DISPLAY.fill(TEAL)
-	template()
+
+def main():		
+	pygame.init()
+	DISPLAY = pygame.display.set_mode((300,300))
+	pygame.display.set_caption('Tic Tac Toe')
 	clock = pygame.time.Clock()
-	fps = 60
-	
-	key = pygame.key.get_pressed()
+	fps = 30
 
-	if key[pygame.K_SPACE]:
+	running = True
+	won = False
+	turn = random.choice((X,O))
 
-		board = [None,None,None,
-		 		 None,None,None,
-				 None,None,None]
+	Ximg = pygame.image.load("X.png")
+	Oimg = pygame.image.load("O.png")
+	coords = [(0,0),(100,0),(200,0),
+		 (0,100),(100,100),(200,100),
+		 (0,200),(100,200),(200,200)]
+	board = [None]*9
 
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			running = False
-			pygame.quit()
-
+	while running:
+		template(DISPLAY, board, Ximg, Oimg, coords)
 		
+		key = pygame.key.get_pressed()
 
-		elif event.type == MOUSEBUTTONDOWN:
+		if key[pygame.K_SPACE]:
+
+			board = [None]*9
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				running = False
+
 			
-			mouse_clicked()
-			turn = turns(turn)
 
-	clock.tick(fps)
+			elif event.type == MOUSEBUTTONDOWN:
+				
+				mouse_clicked(board, turn)
+				turn = turns(turn)
 
-	pygame.display.update()
+		pygame.display.update()
+		clock.tick(fps)
+	pygame.quit()
+if __name__ == "__main__":
+	main()
