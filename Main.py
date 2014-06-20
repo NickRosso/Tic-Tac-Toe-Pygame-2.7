@@ -23,34 +23,34 @@ def template(DISPLAY, board, Ximg, Oimg, coords):
 			DISPLAY.blit(Oimg, (coords[n]))
 			
 def draw_XO(row, col, board, turn):
-	if is_cell_taken(1, 1, board[0]):
+	if is_cell_taken(row, col, 1, 1, board[0]):
 		board[0] = turn
 
-	if is_cell_taken(2, 1, board[1]):
+	if is_cell_taken(row, col, 2, 1, board[1]):
 		board[1] = turn
 
-	if is_cell_taken(3, 1, board[2]):
+	if is_cell_taken(row, col, 3, 1, board[2]):
 		board[2] = turn
 
-	if is_cell_taken(1, 2, board[3]):
+	if is_cell_taken(row, col, 1, 2, board[3]):
 		board[3] = turn
 	
-	if is_cell_taken(2, 2, board[4]):
+	if is_cell_taken(row, col, 2, 2, board[4]):
 		board[4] = turn
 
-	if is_cell_taken(3, 2, board[5]):
+	if is_cell_taken(row, col, 3, 2, board[5]):
 		board[5] = turn
 	
-	if is_cell_taken(1, 3, board[6]):
+	if is_cell_taken(row, col, 1, 3, board[6]):
 		board[6] = turn
 		
-	if is_cell_taken(2, 3, board[7]):
+	if is_cell_taken(row, col, 2, 3, board[7]):
 		board[7] = turn
 
-	if is_cell_taken(3, 3, board[8]):
+	if is_cell_taken(row, col, 3, 3, board[8]):
 		board[8] = turn
 	
-def is_cell_taken( x, y, content):
+def is_cell_taken(row, col, x, y, content):
 	return row == x and col == y and content == None
 	
 def is_win(board):
@@ -89,8 +89,7 @@ def is_tie(board):
 		return True
 
 def mouse_clicked(board, turn):
-	global row
-	global col
+	
 	
 	row, col = pygame.mouse.get_pos()
 
