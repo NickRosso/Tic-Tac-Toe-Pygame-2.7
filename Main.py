@@ -1,31 +1,10 @@
-import pygame
-from pygame.locals import *
 import random
-import time
-TEAL =  (193, 254, 212)
-BLACK =   pygame.Color("black")
-X = "X"
-O = "O"
+from GUI import *
 
-def template(DISPLAY, board, Ximg, Oimg, coords):
-	
-	DISPLAY.fill(TEAL)
-	pygame.draw.line(DISPLAY, BLACK, (100, 0),(100, 300), 2)
-	pygame.draw.line(DISPLAY, BLACK, (200, 0),(200, 300), 2)
-	pygame.draw.line(DISPLAY, BLACK, (0, 100),(300, 100), 2)
-	pygame.draw.line(DISPLAY, BLACK, (0, 200),(300, 200), 2)
-
-	for n in range(0,9):
-		if board[n] == X:
-			DISPLAY.blit(Ximg, (coords[n]))
-
-		if board[n] == O:
-			DISPLAY.blit(Oimg, (coords[n]))
-			
 def draw_XO(row, col, board, turn):
 	if is_cell_taken(row, col, 1, 1, board[0]):
 		board[0] = turn
-
+		
 	if is_cell_taken(row, col, 2, 1, board[1]):
 		board[1] = turn
 
@@ -52,6 +31,7 @@ def draw_XO(row, col, board, turn):
 	
 def is_cell_taken(row, col, x, y, content):
 	return row == x and col == y and content == None
+
 	
 def is_win(board):
 	if is_row_win(board[0], board[1], board[2]) or is_row_win(board[0], board[3], board[6]):
@@ -89,8 +69,6 @@ def is_tie(board):
 		return True
 
 def mouse_clicked(board, turn):
-	
-	
 	row, col = pygame.mouse.get_pos()
 
 
@@ -115,7 +93,7 @@ def mouse_clicked(board, turn):
 	draw_XO(row, col, board, turn)
 	is_win(board)
 
-def turns( turn):
+def turns(turn):
 	if turn == X:
 		current_turn = O
 		return current_turn
@@ -135,18 +113,16 @@ def main():
 	won = False
 	turn = random.choice((X,O))
 
-	Ximg = pygame.image.load("X.png")
-	Oimg = pygame.image.load("O.png")
-	coords = [(0,0),(100,0),(200,0),
-		 (0,100),(100,100),(200,100),
-		 (0,200),(100,200),(200,200)]
+	coords = [(0,  0),(100,  0),(200,  0),
+		 	  (0,100),(100,100),(200,100),
+		      (0,200),(100,200),(200,200)]
+
 	board = [None]*9
 
 	while running:
 		template(DISPLAY, board, Ximg, Oimg, coords)
 		
 		key = pygame.key.get_pressed()
-
 		if key[pygame.K_SPACE]:
 
 			board = [None]*9
@@ -154,8 +130,6 @@ def main():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
-
-			
 
 			elif event.type == MOUSEBUTTONDOWN:
 				
@@ -165,5 +139,6 @@ def main():
 		pygame.display.update()
 		clock.tick(fps)
 	pygame.quit()
+
 if __name__ == "__main__":
 	main()
