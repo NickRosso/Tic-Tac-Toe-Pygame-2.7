@@ -71,7 +71,6 @@ def is_tie(board):
 def mouse_clicked(board, turn):
     row, col = pygame.mouse.get_pos()
 
-
     if col < 100:
         col = 1
 
